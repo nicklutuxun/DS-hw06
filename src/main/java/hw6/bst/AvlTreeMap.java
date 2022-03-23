@@ -46,6 +46,9 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
   }
   
   private int getBf(Node<K,V> n) {
+    if (n == null) {
+      return 0;
+    }
     int leftHeight = n.left == null ? -1 : n.left.height;
     int rightHeight = n.right == null ? -1 : n.right.height;
     return leftHeight - rightHeight;
@@ -56,16 +59,16 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
     int leftBf = getBf(n.left);
     int rightBf = getBf(n.right);
     
-    if (bf == -2) {
-      if (rightBf == -1) {
+    if (bf == -2) { // right heavy
+      if (rightBf == -1) { // right heavy
         n = leftRotation(n);
-      } else if (leftBf == 1) {
+      } else if (rightBf == 1) { // left heavy
         n = rightLeftRotation(n);
       }
-    } else if (bf == 2) {
-      if (rightBf == -1) {
+    } else if (bf == 2) { // left heavy
+      if (leftBf == -1) { // right heavy
         n = leftRightRotation(n);
-      } else if (leftBf == 1) {
+      } else if (leftBf == 1) { // left heavy
         n = rightRotation(n);
       }
     }
@@ -74,25 +77,25 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
   
   private Node<K,V> leftRotation(Node<K,V> n) {
     Node<K,V> child = n.right;
-    root.right = child.left;
-    child.left = root;
+    n.right = child.left;
+    child.left = n;
     return child;
   }
   
   private Node<K,V> rightRotation(Node<K,V> n) {
     Node<K,V> child = n.left;
-    root.left = child.right;
-    child.right = root;
+    n.left = child.right;
+    child.right = n;
     return child;
   }
   
   private Node<K,V> rightLeftRotation(Node<K,V> n) {
     n.right = rightRotation(n.right);
-    return leftRightRotation(n);
+    return leftRotation(n);
   }
   
   private Node<K,V> leftRightRotation(Node<K,V> n) {
-    n.right = leftRotation(n.right);
+    n.left = leftRotation(n.left);
     return rightRotation(n);
   }
   
