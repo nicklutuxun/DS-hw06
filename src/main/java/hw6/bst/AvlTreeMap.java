@@ -13,10 +13,102 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
 
   /*** Do not change variable name of 'root'. ***/
   private Node<K, V> root;
-
+  private int size;
+  
+  private Node<K, V> insert(Node<K, V> n, K k, V v) {
+    if (n == null) {
+      return new Node<>(k, v);
+    }
+    
+    int cmp = k.compareTo(n.key);
+    if (cmp < 0) {
+      n.left = insert(n.left, k, v);
+    } else if (cmp > 0) {
+      n.right = insert(n.right, k, v);
+    } else {
+      throw new IllegalArgumentException("duplicate key " + k);
+    }
+    adjustHeight(n);
+    n = rotate(n);
+    adjustHeight(n);
+    
+    return n;
+  }
+  
   @Override
   public void insert(K k, V v) throws IllegalArgumentException {
     // TODO Implement Me!
+    if (k == null) {
+      throw new IllegalArgumentException("cannot handle null key");
+    }
+    root = insert(root, k, v);
+    size++;
+  }
+  
+  private int getBf(Node<K,V> n) {
+    int leftHeight = n.left == null ? -1 : n.left.height;
+    int rightHeight = n.right == null ? -1 : n.right.height;
+    return leftHeight - rightHeight;
+  }
+  
+  private Node<K,V> rotate(Node<K,V> n) {
+    int bf = getBf(n);
+    int leftBf = getBf(n.left);
+    int rightBf = getBf(n.right);
+    
+    if (bf == -2) {
+      if (rightBf == -1) {
+        n = leftRotation(n);
+      } else if (leftBf == 1) {
+        n = rightLeftRotation(n);
+      }
+    } else if (bf == 2) {
+      if (rightBf == -1) {
+        n = leftRightRotation(n);
+      } else if (leftBf == 1) {
+        n = rightRotation(n);
+      }
+    }
+    return n;
+  }
+  
+  private Node<K,V> leftRotation(Node<K,V> n) {
+    Node<K,V> child = n.right;
+    root.right = child.left;
+    child.left = root;
+    return child;
+  }
+  
+  private Node<K,V> rightRotation(Node<K,V> n) {
+    Node<K,V> child = n.left;
+    root.left = child.right;
+    child.right = root;
+    return child;
+  }
+  
+  private Node<K,V> rightLeftRotation(Node<K,V> n) {
+    n.right = rightRotation(n.right);
+    return leftRightRotation(n);
+  }
+  
+  private Node<K,V> leftRightRotation(Node<K,V> n) {
+    n.right = leftRotation(n.right);
+    return rightRotation(n);
+  }
+  
+  private void adjustHeight(Node<K,V> n) {
+    if (n == null) {
+      return;
+    }
+    if (n.left == null && n.right == null) {
+      n.height = 0;
+    } else if (n.left == null) {
+      n.height = n.right.height + 1;
+    } else if (n.right == null) {
+      n.height = n.left.height + 1;
+    } else {
+      n.height = n.left.height > n.right.height ? n.left.height + 1 : n.right.height + 1;
+    }
   }
 
   @Override
@@ -74,12 +166,14 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
     Node<K, V> right;
     K key;
     V value;
+    int height;
 
     // Constructor to make node creation easier to read.
     Node(K k, V v) {
       // left and right default to null
       key = k;
       value = v;
+      height = 0;
     }
 
     @Override
