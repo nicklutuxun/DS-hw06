@@ -2,6 +2,7 @@ package hw6.bst;
 
 import hw6.OrderedMap;
 import java.util.Iterator;
+import java.util.Stack;
 
 /**
  * Map implemented as an AVL Tree.
@@ -37,7 +38,6 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
   
   @Override
   public void insert(K k, V v) throws IllegalArgumentException {
-    // TODO Implement Me!
     if (k == null) {
       throw new IllegalArgumentException("cannot handle null key");
     }
@@ -122,31 +122,86 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
 
   @Override
   public void put(K k, V v) throws IllegalArgumentException {
-    // TODO Implement Me!
+    Node<K, V> n = findForSure(k);
+    n.value = v;
   }
 
   @Override
   public V get(K k) throws IllegalArgumentException {
-    // TODO Implement Me!
-    return null;
+    Node<K, V> n = findForSure(k);
+    return n.value;
   }
-
+  
   @Override
   public boolean has(K k) {
-    // TODO Implement Me!
-    return false;
+    return find(k) != null;
+  }
+  
+  // Return node for given key,
+  // throw an exception if the key is not in the tree.
+  private Node<K, V> findForSure(K k) {
+    Node<K, V> n = find(k);
+    if (n == null) {
+      throw new IllegalArgumentException("cannot find key " + k);
+    }
+    return n;
+  }
+  
+  private Node<K, V> find(K k) {
+    if (k == null) {
+      throw new IllegalArgumentException("cannot handle null key");
+    }
+    Node<K, V> n = root;
+    while (n != null) {
+      int cmp = k.compareTo(n.key);
+      if (cmp < 0) {
+        n = n.left;
+      } else if (cmp > 0) {
+        n = n.right;
+      } else {
+        return n;
+      }
+    }
+    return null;
   }
 
   @Override
   public int size() {
-    // TODO Implement Me!
-    return 0;
+    return size;
   }
 
   @Override
   public Iterator<K> iterator() {
-    // TODO Implement Me!
-    return null;
+    return new InorderIterator();
+  }
+  
+  // Iterative in-order traversal over the keys
+  private class InorderIterator implements Iterator<K> {
+    private final Stack<Node<K, V>> stack;
+    
+    InorderIterator() {
+      stack = new Stack<>();
+      pushLeft(root);
+    }
+    
+    private void pushLeft(Node<K, V> curr) {
+      while (curr != null) {
+        stack.push(curr);
+        curr = curr.left;
+      }
+    }
+    
+    @Override
+    public boolean hasNext() {
+      return !stack.isEmpty();
+    }
+    
+    @Override
+    public K next() {
+      Node<K, V> top = stack.pop();
+      pushLeft(top.right);
+      return top.key;
+    }
   }
 
   /*** Do not change this function's name or modify its code. ***/
