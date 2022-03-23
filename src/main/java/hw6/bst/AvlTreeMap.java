@@ -116,8 +116,54 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
 
   @Override
   public V remove(K k) throws IllegalArgumentException {
-    // TODO Implement Me!
-    return null;
+    Node<K, V> node = findForSure(k);
+    root = remove(root, node);
+    size--;
+    return node.value;
+  }
+  
+  // Remove node with given key from subtree rooted at given node;
+  // Return changed subtree with given key missing.
+  private Node<K, V> remove(Node<K, V> subtreeRoot, Node<K, V> toRemove) {
+    int cmp = subtreeRoot.key.compareTo(toRemove.key);
+    if (cmp == 0) {
+      return remove(subtreeRoot);
+    } else if (cmp > 0) {
+      subtreeRoot.left = remove(subtreeRoot.left, toRemove);
+    } else {
+      subtreeRoot.right = remove(subtreeRoot.right, toRemove);
+    }
+    
+    return subtreeRoot;
+  }
+  
+  // Remove given node and return the remaining tree (structural change).
+  private Node<K, V> remove(Node<K, V> node) {
+    // Easy if the node has 0 or 1 child.
+    if (node.right == null) {
+      return node.left;
+    } else if (node.left == null) {
+      return node.right;
+    }
+    
+    // If it has two children, find the predecessor (max in left subtree),
+    Node<K, V> toReplaceWith = max(node);
+    // then copy its data to the given node (value change),
+    node.key = toReplaceWith.key;
+    node.value = toReplaceWith.value;
+    // then remove the predecessor node (structural change).
+    node.left = remove(node.left, toReplaceWith);
+    
+    return node;
+  }
+  
+  // Return a node with maximum key in subtree rooted at given node.
+  private Node<K, V> max(Node<K, V> node) {
+    Node<K, V> curr = node.left;
+    while (curr.right != null) {
+      curr = curr.right;
+    }
+    return curr;
   }
 
   @Override
