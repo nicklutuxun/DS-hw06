@@ -59,17 +59,17 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
     int leftBf = getBf(n.left);
     int rightBf = getBf(n.right);
     
-    if (bf == -2) { // right heavy
-      if (rightBf == -1) { // right heavy
+    if (bf < -1) { // right heavy
+      if (rightBf <= 0) { // right heavy
         n = leftRotation(n);
-      } else if (rightBf == 1) { // left heavy
+      } else { // left heavy
         n = rightLeftRotation(n);
       }
-    } else if (bf == 2) { // left heavy
-      if (leftBf == -1) { // right heavy
-        n = leftRightRotation(n);
-      } else if (leftBf == 1) { // left heavy
+    } else if (bf > 1) { // left heavy
+      if (leftBf >= 0) { // right heavy
         n = rightRotation(n);
+      } else { // left heavy
+        n = leftRightRotation(n);
       }
     }
     return n;
@@ -79,6 +79,7 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
     Node<K,V> child = n.right;
     n.right = child.left;
     child.left = n;
+    adjustHeight(n);
     return child;
   }
   
@@ -86,6 +87,7 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
     Node<K,V> child = n.left;
     n.left = child.right;
     child.right = n;
+    adjustHeight(n);
     return child;
   }
   
@@ -128,14 +130,16 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
   private Node<K, V> remove(Node<K, V> subtreeRoot, Node<K, V> toRemove) {
     int cmp = subtreeRoot.key.compareTo(toRemove.key);
     if (cmp == 0) {
-      return remove(subtreeRoot);
+      subtreeRoot =  remove(subtreeRoot);
     } else if (cmp > 0) {
       subtreeRoot.left = remove(subtreeRoot.left, toRemove);
     } else {
       subtreeRoot.right = remove(subtreeRoot.right, toRemove);
     }
     adjustHeight(subtreeRoot);
-    subtreeRoot = rotate(subtreeRoot);
+    if (subtreeRoot != null) {
+      subtreeRoot = rotate(subtreeRoot);
+    }
     adjustHeight(subtreeRoot);
     
     return subtreeRoot;
@@ -184,6 +188,9 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
   
   @Override
   public boolean has(K k) {
+    if (k == null) {
+      return false;
+    }
     return find(k) != null;
   }
   
