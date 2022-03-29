@@ -164,57 +164,193 @@ public class AvlTreeMapTest extends BinarySearchTreeMapTest {
   
   @Test
   public void removeOneChildLeftRotation() {
+    map.insert("3", "3");
+    map.insert("2", "2");
+    map.insert("5", "5");
+    map.insert("1", "1");
+    map.insert("4", "4");
+    map.insert("6", "6");
+    map.insert("7", "7");
+    map.remove("2");
   
+    String[] expected = new String[]{
+        "5:5",
+        "3:3 6:6",
+        "1:1 4:4 null 7:7"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeOneChildRightRotation() {
+    map.insert("5", "5");
+    map.insert("3", "3");
+    map.insert("6", "6");
+    map.insert("2", "2");
+    map.insert("4", "4");
+    map.insert("7", "7");
+    map.insert("1", "1");
+    map.remove("6");
   
+    String[] expected = new String[]{
+        "3:3",
+        "2:2 5:5",
+        "1:1 null 4:4 7:7"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeOneChildLeftRightRotation() {
+    map.insert("5", "5");
+    map.insert("2", "2");
+    map.insert("6", "6");
+    map.insert("1", "1");
+    map.insert("3", "3");
+    map.insert("7", "7");
+    map.insert("4", "4");
+    map.remove("6");
   
+    String[] expected = new String[]{
+        "3:3",
+        "2:2 5:5",
+        "1:1 null 4:4 7:7"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeOneChildRightLeftRotation() {
+    map.insert("3", "3");
+    map.insert("2", "2");
+    map.insert("6", "6");
+    map.insert("1", "1");
+    map.insert("5", "5");
+    map.insert("7", "7");
+    map.insert("4", "4");
+    map.remove("2");
   
+    String[] expected = new String[]{
+        "5:5",
+        "3:3 6:6",
+        "1:1 4:4 null 7:7"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeTwoChildrenLeftRotation() {
+    map.insert("2", "2");
+    map.insert("1", "1");
+    map.insert("3", "3");
+    map.insert("4", "4");
+    map.remove("2");
   
+    String[] expected = new String[]{
+        "3:3",
+        "1:1 4:4"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeTwoChildrenRightRotation() {
-  
+    map.insert("5","5");
+    map.insert("3","3");
+    map.insert("6","6");
+    map.insert("2","2");
+    map.insert("4","4");
+    map.insert("7","7");
+    map.insert("1","1");
+    map.remove("5");
+    String[] expected = new String[]{
+        "4:4",
+        "2:2 6:6",
+        "1:1 3:3 null 7:7"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeTwoChildrenLeftRightRotation() {
-  
+    map.insert("5","5");
+    map.insert("3","3");
+    map.insert("6","6");
+    map.insert("1","1");
+    map.insert("4","4");
+    map.insert("7","7");
+    map.insert("2","2");
+    map.remove("5");
+    String[] expected = new String[]{
+        "4:4",
+        "2:2 6:6",
+        "1:1 3:3 null 7:7"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeTwoChildrenRightLeftRotation() {
+    map.insert("1", "1");
+    map.insert("2", "2");
+    map.insert("4", "4");
+    map.insert("3", "3");
+    map.remove("2");
   
+    String[] expected = new String[]{
+        "3:3",
+        "1:1 4:4"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeLeafNoRotation() {
+    map.insert("1", "1");
+    map.insert("2", "2");
+    map.insert("3", "3");
+    map.insert("4", "4");
+    map.remove("4");
   
+    String[] expected = new String[]{
+        "2:2",
+        "1:1 3:3"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeOneChildNoRotation() {
+    map.insert("1", "1");
+    map.insert("2", "2");
+    map.insert("3", "3");
+    map.insert("4", "4");
+    map.remove("3");
   
+    String[] expected = new String[]{
+        "2:2",
+        "1:1 4:4"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeTwoChildrenNoRotation() {
+    map.insert("1", "1");
+    map.insert("2", "2");
+    map.insert("3", "3");
+    map.insert("4", "4");
+    map.insert("5", "5");
+    map.insert("6", "6");
+    map.insert("7", "7");
+    map.remove("4");
   
+    String[] expected = new String[]{
+        "3:3",
+        "2:2 6:6",
+        "1:1 null 5:5 7:7"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
@@ -238,6 +374,4 @@ public class AvlTreeMapTest extends BinarySearchTreeMapTest {
     };
     assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
-  
-  
 }
