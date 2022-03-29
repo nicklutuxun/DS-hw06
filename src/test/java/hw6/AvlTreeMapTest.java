@@ -104,30 +104,62 @@ public class AvlTreeMapTest extends BinarySearchTreeMapTest {
   
   @Test
   public void removeLeafLeftRotation() {
-    map.insert("2", "b");
-    map.insert("1", "a");
-    map.insert("3", "c"); // no rotation here!
-
+    map.insert("1", "1");
+    map.insert("2", "2");
+    map.insert("3", "3");
+    map.insert("4", "4");
+    map.remove("1");
+  
     String[] expected = new String[]{
-        "2:b",
-        "1:a 3:c"
+        "3:3",
+        "2:2 4:4"
     };
     assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeLeafRightRotation() {
+    map.insert("2", "2");
+    map.insert("3", "3");
+    map.insert("4", "4");
+    map.insert("1", "1");
+    map.remove("4");
   
+    String[] expected = new String[]{
+        "2:2",
+        "1:1 3:3"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeLeafLeftRightRotation() {
+    map.insert("3", "3");
+    map.insert("1", "1");
+    map.insert("4", "4");
+    map.insert("2", "2");
+    map.remove("4");
   
+    String[] expected = new String[]{
+        "2:2",
+        "1:1 3:3"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
   public void removeLeafRightLeftRotation() {
+    map.insert("2", "2");
+    map.insert("1", "1");
+    map.insert("4", "4");
+    map.insert("3", "3");
+    map.remove("1");
   
+    String[] expected = new String[]{
+        "3:3",
+        "2:2 4:4"
+    };
+    assertEquals((String.join("\n", expected) + "\n"), map.toString());
   }
   
   @Test
