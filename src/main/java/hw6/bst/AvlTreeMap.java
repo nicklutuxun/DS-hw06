@@ -117,9 +117,10 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
   @Override
   public V remove(K k) throws IllegalArgumentException {
     Node<K, V> node = findForSure(k);
+    V value = node.value;
     root = remove(root, node);
     size--;
-    return node.value;
+    return value;
   }
   
   // Remove node with given key from subtree rooted at given node;
@@ -133,6 +134,9 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
     } else {
       subtreeRoot.right = remove(subtreeRoot.right, toRemove);
     }
+    adjustHeight(subtreeRoot);
+    subtreeRoot = rotate(subtreeRoot);
+    adjustHeight(subtreeRoot);
     
     return subtreeRoot;
   }
