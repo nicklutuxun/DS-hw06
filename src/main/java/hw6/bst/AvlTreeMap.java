@@ -130,7 +130,7 @@ public class AvlTreeMap<K extends Comparable<K>, V> implements OrderedMap<K, V> 
   private Node<K, V> remove(Node<K, V> subtreeRoot, Node<K, V> toRemove) {
     int cmp = subtreeRoot.key.compareTo(toRemove.key);
     if (cmp == 0) {
-      subtreeRoot =  remove(subtreeRoot);
+      subtreeRoot = remove(subtreeRoot);
     } else if (cmp > 0) {
       subtreeRoot.left = remove(subtreeRoot.left, toRemove);
     } else {
