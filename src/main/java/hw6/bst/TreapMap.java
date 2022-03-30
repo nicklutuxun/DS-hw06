@@ -111,6 +111,7 @@ public class TreapMap<K extends Comparable<K>, V> implements OrderedMap<K, V> {
   // Remove node with given key from subtree rooted at given node;
   // Return changed subtree with given key missing.
   private Node<K, V> remove(Node<K, V> subtreeRoot, Node<K, V> toRemove) {
+    
     int cmp = subtreeRoot.key.compareTo(toRemove.key);
     if (cmp == 0) {
       return remove(subtreeRoot);
@@ -127,21 +128,23 @@ public class TreapMap<K extends Comparable<K>, V> implements OrderedMap<K, V> {
   
   // Remove given node and return the remaining tree (structural change).
   private Node<K, V> remove(Node<K, V> node) {
-    // Easy if the node has 0 or 1 child.
-    if (node.right == null) {
-      return node.left;
+    if (node.left == null && node.right == null) {
+      return null;
     } else if (node.left == null) {
-      return node.right;
-    }
-    
-    if (node.left.priority > node.right.priority) {
       node = leftRotation(node);
       node.left = remove(node.left);
-    } else if (node.left.priority < node.right.priority) {
+    } else if (node.right == null) {
       node = rightRotation(node);
       node.right = remove(node.right);
+    } else {
+      if (node.left.priority > node.right.priority) {
+        node = leftRotation(node);
+        node.left = remove(node.left);
+      } else if (node.left.priority < node.right.priority) {
+        node = rightRotation(node);
+        node.right = remove(node.right);
+      }
     }
-    
     return node;
   }
   
