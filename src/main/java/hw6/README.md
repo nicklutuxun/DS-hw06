@@ -40,3 +40,9 @@ To remove 2 that has one child, first perform a rightRotation to make 2 a leaf, 
 | JmhRuntimeTest.bstMap     | avgt | 2   | 111.035 |       | ms/op |
 | JmhRuntimeTest.treapMap   | avgt | 2   | 116.274 |       | ms/op |
 
+In both tests, arrayMap is the slowest, since all operations are as inefficient as O(n).
+
+Among other three data structures, the speed follows as AvlTree > BST > Treap.
+AvlTree is the fastest since it is self-balanced. In insertion, it takes O(N) to insert and O(1) to rebalance.
+BST is the second fastest. The time complexity is `O(h)` where h is the height of the tree. But unlike AvlTree, BST is not necessarily balanced. In the worst case, all the nodes in the BST will be arranged in a single path, so height=n, time complexity is O(n). In the best case, BST is a perfect binary tree, so height=log(n) and time complexity is O(logn).
+Treap is the slowest because the randomness in generating priority. Its time complexity is also `O(h)`, and best case O(logn), worst case O(n). Due to the factor of randomness, it is possible the shape of tree is "worse" than other two structures in terms of traversal.
